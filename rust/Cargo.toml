@@ -8,3 +8,5 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 flutter_rust_bridge = "=2.0.0"
+nostr = { version = "0.35.0", features = ["all-nips"] }
+nostr-sdk = "0.35.0"
