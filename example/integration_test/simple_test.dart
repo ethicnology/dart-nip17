@@ -4,7 +4,7 @@ import 'package:nostr_sdk/nostr_sdk.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  setUpAll(() async => await RustLib.init());
+  setUpAll(() async => await Nip17.init());
   test('Can call rust function', () async {
     expect(greet(name: "Tom"), "Hello, Tom!");
   });
