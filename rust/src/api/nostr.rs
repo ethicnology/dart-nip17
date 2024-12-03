@@ -7,7 +7,7 @@ use nostr_sdk::Client;
 use nostr_sdk::NostrSigner;
 
 #[flutter_rust_bridge::frb(sync)]
-pub async fn keys(hex: String) -> (String, String) {
+pub fn keys(hex: String) -> (String, String) {
     let keys = Keys::parse(hex).unwrap();
     (
         keys.secret_key().to_secret_hex(),

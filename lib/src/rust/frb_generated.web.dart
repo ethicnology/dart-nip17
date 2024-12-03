@@ -6,14 +6,15 @@
 // Static analysis wrongly picks the IO variant, thus ignore this
 // ignore_for_file: argument_type_not_assignable
 
+import 'api/nostr.dart';
 import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 
-abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
-  RustLibApiImplPlatform({
+abstract class Nip17ApiImplPlatform extends BaseApiImpl<Nip17Wire> {
+  Nip17ApiImplPlatform({
     required super.handler,
     required super.wire,
     required super.generalizedFrbRustBinding,
@@ -24,7 +25,23 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String dco_decode_String(dynamic raw);
 
   @protected
+  bool dco_decode_bool(dynamic raw);
+
+  @protected
+  (String, String) dco_decode_box_autoadd_record_string_string(dynamic raw);
+
+  @protected
+  List<int> dco_decode_list_prim_u_8_loose(dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  (String, String)? dco_decode_opt_box_autoadd_record_string_string(
+      dynamic raw);
+
+  @protected
+  (String, String) dco_decode_record_string_string(dynamic raw);
 
   @protected
   int dco_decode_u_8(dynamic raw);
@@ -36,7 +53,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  (String, String) sse_decode_box_autoadd_record_string_string(
+      SseDeserializer deserializer);
+
+  @protected
+  List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer);
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  (String, String)? sse_decode_opt_box_autoadd_record_string_string(
+      SseDeserializer deserializer);
+
+  @protected
+  (String, String) sse_decode_record_string_string(
+      SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_8(SseDeserializer deserializer);
@@ -48,14 +83,29 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer);
+  void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
-  void sse_encode_String(String self, SseSerializer serializer);
+  void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_record_string_string(
+      (String, String) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_prim_u_8_loose(List<int> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_record_string_string(
+      (String, String)? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_string(
+      (String, String) self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_8(int self, SseSerializer serializer);
@@ -65,20 +115,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
 }
 
 // Section: wire_class
 
-class RustLibWire implements BaseWire {
-  RustLibWire.fromExternalLibrary(ExternalLibrary lib);
+class Nip17Wire implements BaseWire {
+  Nip17Wire.fromExternalLibrary(ExternalLibrary lib);
 }
 
 @JS('wasm_bindgen')
-external RustLibWasmModule get wasmModule;
+external Nip17WasmModule get wasmModule;
 
 @JS()
 @anonymous
-extension type RustLibWasmModule._(JSObject _) implements JSObject {}
+extension type Nip17WasmModule._(JSObject _) implements JSObject {}
