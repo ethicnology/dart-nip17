@@ -26,17 +26,13 @@ abstract class Nip17ApiImplPlatform extends BaseApiImpl<Nip17Wire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
-  (String, String) dco_decode_box_autoadd_record_string_string(dynamic raw);
-
-  @protected
   List<int> dco_decode_list_prim_u_8_loose(dynamic raw);
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
-  (String, String)? dco_decode_opt_box_autoadd_record_string_string(
-      dynamic raw);
+  String? dco_decode_opt_String(dynamic raw);
 
   @protected
   (String, String) dco_decode_record_string_string(dynamic raw);
@@ -54,18 +50,13 @@ abstract class Nip17ApiImplPlatform extends BaseApiImpl<Nip17Wire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
-  (String, String) sse_decode_box_autoadd_record_string_string(
-      SseDeserializer deserializer);
-
-  @protected
   List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer);
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
-  (String, String)? sse_decode_opt_box_autoadd_record_string_string(
-      SseDeserializer deserializer);
+  String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
   (String, String) sse_decode_record_string_string(
@@ -87,10 +78,6 @@ abstract class Nip17ApiImplPlatform extends BaseApiImpl<Nip17Wire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_record_string_string(
-      (String, String) self, SseSerializer serializer);
-
-  @protected
   void sse_encode_list_prim_u_8_loose(List<int> self, SseSerializer serializer);
 
   @protected
@@ -98,8 +85,7 @@ abstract class Nip17ApiImplPlatform extends BaseApiImpl<Nip17Wire> {
       Uint8List self, SseSerializer serializer);
 
   @protected
-  void sse_encode_opt_box_autoadd_record_string_string(
-      (String, String)? self, SseSerializer serializer);
+  void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_string_string(

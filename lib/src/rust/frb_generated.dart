@@ -59,7 +59,7 @@ class Nip17 extends BaseEntrypoint<Nip17Api, Nip17ApiImpl, Nip17Wire> {
   String get codegenVersion => '2.0.0';
 
   @override
-  int get rustContentHash => -756864921;
+  int get rustContentHash => -2005633882;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -70,15 +70,15 @@ class Nip17 extends BaseEntrypoint<Nip17Api, Nip17ApiImpl, Nip17Wire> {
 }
 
 abstract class Nip17Api extends BaseApi {
-  Future<(String, String)?> crateApiNostrDecodeNip17(
-      {required String receiverSecretKey, required String eventJson});
-
   Future<String> crateApiNostrEncodeNip17(
       {required String senderSecret,
       required String receiverPublic,
       required String message});
 
   (String, String) crateApiNostrKeys({required String hex});
+
+  Future<String?> crateApiNostrReceiveNip17(
+      {required String receiverSecretKey, required String eventJson});
 
   Future<String> crateApiNostrSendNip17(
       {required String senderSecretKey,
@@ -108,32 +108,6 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
   });
 
   @override
-  Future<(String, String)?> crateApiNostrDecodeNip17(
-      {required String receiverSecretKey, required String eventJson}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(receiverSecretKey, serializer);
-        sse_encode_String(eventJson, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 1, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_box_autoadd_record_string_string,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiNostrDecodeNip17ConstMeta,
-      argValues: [receiverSecretKey, eventJson],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiNostrDecodeNip17ConstMeta => const TaskConstMeta(
-        debugName: "decode_nip17",
-        argNames: ["receiverSecretKey", "eventJson"],
-      );
-
-  @override
   Future<String> crateApiNostrEncodeNip17(
       {required String senderSecret,
       required String receiverPublic,
@@ -145,7 +119,7 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
         sse_encode_String(receiverPublic, serializer);
         sse_encode_String(message, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 2, port: port_);
+            funcId: 1, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -168,7 +142,7 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(hex, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_record_string_string,
@@ -183,6 +157,32 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
   TaskConstMeta get kCrateApiNostrKeysConstMeta => const TaskConstMeta(
         debugName: "keys",
         argNames: ["hex"],
+      );
+
+  @override
+  Future<String?> crateApiNostrReceiveNip17(
+      {required String receiverSecretKey, required String eventJson}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(receiverSecretKey, serializer);
+        sse_encode_String(eventJson, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 3, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_opt_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiNostrReceiveNip17ConstMeta,
+      argValues: [receiverSecretKey, eventJson],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiNostrReceiveNip17ConstMeta => const TaskConstMeta(
+        debugName: "receive_nip17",
+        argNames: ["receiverSecretKey", "eventJson"],
       );
 
   @override
@@ -328,12 +328,6 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
   }
 
   @protected
-  (String, String) dco_decode_box_autoadd_record_string_string(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw as (String, String);
-  }
-
-  @protected
   List<int> dco_decode_list_prim_u_8_loose(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as List<int>;
@@ -346,12 +340,9 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
   }
 
   @protected
-  (String, String)? dco_decode_opt_box_autoadd_record_string_string(
-      dynamic raw) {
+  String? dco_decode_opt_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw == null
-        ? null
-        : dco_decode_box_autoadd_record_string_string(raw);
+    return raw == null ? null : dco_decode_String(raw);
   }
 
   @protected
@@ -393,13 +384,6 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
   }
 
   @protected
-  (String, String) sse_decode_box_autoadd_record_string_string(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_record_string_string(deserializer));
-  }
-
-  @protected
   List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var len_ = sse_decode_i_32(deserializer);
@@ -414,12 +398,11 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
   }
 
   @protected
-  (String, String)? sse_decode_opt_box_autoadd_record_string_string(
-      SseDeserializer deserializer) {
+  String? sse_decode_opt_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     if (sse_decode_bool(deserializer)) {
-      return (sse_decode_box_autoadd_record_string_string(deserializer));
+      return (sse_decode_String(deserializer));
     } else {
       return null;
     }
@@ -464,13 +447,6 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
   }
 
   @protected
-  void sse_encode_box_autoadd_record_string_string(
-      (String, String) self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_record_string_string(self, serializer);
-  }
-
-  @protected
   void sse_encode_list_prim_u_8_loose(
       List<int> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -488,13 +464,12 @@ class Nip17ApiImpl extends Nip17ApiImplPlatform implements Nip17Api {
   }
 
   @protected
-  void sse_encode_opt_box_autoadd_record_string_string(
-      (String, String)? self, SseSerializer serializer) {
+  void sse_encode_opt_String(String? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     sse_encode_bool(self != null, serializer);
     if (self != null) {
-      sse_encode_box_autoadd_record_string_string(self, serializer);
+      sse_encode_String(self, serializer);
     }
   }
 

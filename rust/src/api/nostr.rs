@@ -48,10 +48,7 @@ pub async fn encode_nip17(
     return gift_wrap.as_json();
 }
 
-pub async fn decode_nip17(
-    receiver_secret_key: String,
-    event_json: String,
-) -> Option<(String, String)> {
+pub async fn receive_nip17(receiver_secret_key: String, event_json: String) -> Option<String> {
     let receiver_keys = Keys::parse(receiver_secret_key).unwrap();
     let client = Client::new(receiver_keys);
     let event = Event::from_json(event_json).unwrap();
@@ -59,7 +56,7 @@ pub async fn decode_nip17(
     match client.unwrap_gift_wrap(&event).await {
         Ok(UnwrappedGift { rumor, sender }) => {
             if rumor.kind == Kind::PrivateDirectMessage {
-                return Some((sender.to_hex(), rumor.content));
+                return Some(rumor.as_json());
             }
             return None;
         }

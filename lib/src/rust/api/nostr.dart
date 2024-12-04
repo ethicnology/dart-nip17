@@ -18,9 +18,9 @@ Future<String> encodeNip17(
         receiverPublic: receiverPublic,
         message: message);
 
-Future<(String, String)?> decodeNip17(
+Future<String?> receiveNip17(
         {required String receiverSecretKey, required String eventJson}) =>
-    Nip17.instance.api.crateApiNostrDecodeNip17(
+    Nip17.instance.api.crateApiNostrReceiveNip17(
         receiverSecretKey: receiverSecretKey, eventJson: eventJson);
 
 Future<String> sendNip17(
